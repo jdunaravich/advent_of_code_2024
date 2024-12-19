@@ -4,8 +4,27 @@ import re
 
 def main():
     corrupted_data = load_input()
-    occurrences = find_instances(corrupted_data)
-    print("%s occurrences" % parse_and_sum(occurrences))
+    occurrences = find_occurrences(corrupted_data)
+    print("%s occurrences in default mode" % parse_and_sum(occurrences))
+
+    running_total = 0
+    while True:
+        parse_until = corrupted_data.find("don't()")
+        if parse_until < 0:
+            parse_until = len(corrupted_data)
+        chunk = corrupted_data[:parse_until]
+        running_total += parse_and_sum(find_occurrences(chunk))
+        # Now try to find a new start
+        if parse_until == len(corrupted_data):
+            break
+        corrupted_data = corrupted_data[parse_until:]
+        parse_until = corrupted_data.find("do()")
+        if parse_until > -1:
+            corrupted_data = corrupted_data[parse_until:]
+        else:
+            break
+    print("Running total: %s" % running_total)
+    # breakpoint()
 
 
 def parse_and_sum(occurrences):
@@ -17,7 +36,7 @@ def parse_and_sum(occurrences):
 
 
 
-def find_instances(raw_input_string):
+def find_occurrences(raw_input_string):
     occurrences = re.findall(r'mul\([0-9]{1,3},[0-9]{1,3}\)', raw_input_string)
     return occurrences
 
