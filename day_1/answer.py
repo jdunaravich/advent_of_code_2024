@@ -1,10 +1,13 @@
 import os
+from collections import Counter
 
 
 def main():
     left, right = get_lists_from_input()
     difference = get_difference(right, left)
     print(difference)
+    similarity = get_similarity(right, left)
+    print(similarity)
 
 
 def get_difference(right, left):
@@ -16,6 +19,13 @@ def get_difference(right, left):
         difference += abs(left[index] - right[index])
     return difference
 
+
+def get_similarity(right, left):
+    right_counter = Counter(right)
+    similarity = 0
+    for number in left:
+        similarity += number * right_counter[number]
+    return similarity
     
 
 
