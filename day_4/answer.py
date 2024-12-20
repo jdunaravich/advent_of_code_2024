@@ -4,7 +4,8 @@ def main():
     input_file_contents = load_input()
     word_search = input_to_2_dimensional_array(input_file_contents)
     # word_search = load_test_data()
-    occurrences = search_word_search(word_search=word_search)
+    # occurrences = search_word_search(word_search=word_search)
+    occurrences = search_word_search_strange(word_search)
     print("%s occurrences found" % occurrences)
 
 
@@ -21,6 +22,18 @@ MAMMMXMMMM
 MXMXAXMASX'''
     word_search = [list(row) for row in test_data.split()]
     return word_search
+
+
+def search_word_search_strange(word_search):
+    occurrences = 0
+    for row in range(1, len(word_search) - 1):
+        for column in range(1, len(word_search[0]) - 1):
+            character = word_search[row][column]
+            if character == "A":
+                if set([word_search[row-1][column-1], word_search[row+1][column+1]]) == set("MS") and \
+                   set([word_search[row-1][column+1], word_search[row+1][column-1]]) == set("MS"):
+                    occurrences += 1
+    return occurrences
 
 
 def search_word_search(word_search, search_term="XMAS"):
