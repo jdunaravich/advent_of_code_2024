@@ -24,7 +24,6 @@ def main():
         else:
             break
     print("Running total: %s" % running_total)
-    # breakpoint()
 
 
 def parse_and_sum(occurrences):
@@ -33,7 +32,6 @@ def parse_and_sum(occurrences):
         left, right = map(int, occurrence[4:-1].split(','))
         total += left * right
     return total
-
 
 
 def find_occurrences(raw_input_string):
