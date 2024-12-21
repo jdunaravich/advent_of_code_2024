@@ -6,17 +6,40 @@ def main():
     rules, updates = input_to_rules_and_updates(input_file_contents)
     middle_sum = sum_middles_of_updates_that_follow_rules(updates, rules)
     print("Middle sum is %s" % middle_sum)
-    # print(rules)
-    # print("\n" * 10)
-    # print(updates)
+    fixed_middle_sum = get_fixed_middle_sum(updates, rules)
+    print("Weird middle sum is %s" % fixed_middle_sum)
+
+
+def get_fixed_middle_sum(updates, rules):
+    running_total = 0
+    bad_updates = [update for update in updates if not update_follows_rules(update, rules)]
+    print("%s bad updates exist" % len(bad_updates))
+    for update in bad_updates:
+        update_set = set(update)
+        updated = set()
+        validated = []
+        index = 0
+        while index < len(update):
+            value = update[index]
+            precursors = rules[value]
+            needed = precursors.intersection((update_set - updated))
+            if len(needed) == 0:
+                updated.add(value)
+                validated.append(value)
+                index += 1
+                continue
+            highest_after = max([update.index(number) for number in needed])
+            update.insert(highest_after, update.pop(index))
+            continue
+        middle = update[int(len(update)/2)]
+        running_total += middle
+    return running_total
 
 
 def sum_middles_of_updates_that_follow_rules(updates, rules):
     running_total = 0
     for update in updates:
         if update_follows_rules(update, rules):
-            if (len(update) % 2) != 1:
-                breakpoint()
             middle = update[int(len(update)/2)]
             running_total += middle
     return running_total
